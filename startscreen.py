@@ -10,11 +10,9 @@ class Startscreen(object):
             text = "GRAPH", anchor = "s", font = "Georgia 100")
         canvas.create_text(data.width//2, (data.height*2)//5+data.height//20, 
             text = "BUILDER", anchor = "s", font = "Georgia 100")
-        # Box
         canvas.create_rectangle(data.width//2-self.rx, 
             (data.height*2)//3-self.ry, data.width//2+self.rx,
             (data.height*2)//3+self.ry, fill = "azure1")
-        # Text
         canvas.create_text(data.width//2, (data.height*2)//3, text = "Start",
             font = "Georgia 30")
             

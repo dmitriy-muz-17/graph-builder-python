@@ -2,13 +2,9 @@ import copy
 import math
 # from checkRamsey import *
 from convertNodes import *
-from dfs import *
 from removeEdges import *
 from createEdges import *
-from visualDFS import *
-from visualBFS import *
 from cycles import *
-from dijkstra import *
 
 class Build(object):
     def __init__(self, data):
@@ -114,14 +110,7 @@ class Build(object):
                 data.backY+data.build.lightEraser, fill = "yellow")
                 
     def drawOptions(canvas, data):
-        # grid option
-        canvas.create_text(data.width//2-data.width//15, 2*data.backY, 
-            text = "Grid", font = "Georgia 16")
-        canvas.create_rectangle(data.build.checkboxX-data.build.checkboxR- \
-            data.width//15, 2*data.backY-data.build.checkboxR, 
-            data.build.checkboxX+data.build.checkboxR-data.width//15,
-            2*data.backY+data.build.checkboxR)
-        # edge weights option
+
         canvas.create_text(data.width//2+data.width//15, 2*data.backY,
             text = "Edge Weights", font = "Georgia 16")
         canvas.create_rectangle(data.build.checkboxX-data.build.checkboxR+\
@@ -151,53 +140,7 @@ class Build(object):
             data.build.eraserX+data.build.eraserR, 
             data.backY+data.build.eraserR, fill = "pink")
         
-    def drawDFS(canvas, data):  # draws DFS button
-        rx = 80
-        ry = 20
-        canvas.create_rectangle(data.width//8-rx,
-            data.height//8+(data.height*4)//10-ry, 
-            data.width//8+rx, data.height//8+(data.height*4)//10+ry)
-        canvas.create_text(data.width//8, data.height//8+(data.height*4)//10,
-            text = "DFS", font = "Georgia 20")
-            
-    def drawBFS(canvas, data): # draws BFS button
-        rx = 80
-        ry = 20
-        canvas.create_rectangle(data.width//8-rx,
-            data.height//8+(data.height*5)//10-ry, 
-            data.width//8+rx, data.height//8+(data.height*5)//10+ry)
-        canvas.create_text(data.width//8, data.height//8+(data.height*5)//10,
-            text = "BFS", font = "Georgia 20")
-            
-    def drawHamilton(canvas, data): # draws Hamilton button
-        rx = 80
-        ry = 20
-        canvas.create_rectangle(data.width//8-rx,
-            data.height//8+(data.height*6)//10-ry, 
-            data.width//8+rx, data.height//8+(data.height*6)//10+ry)
-        canvas.create_text(data.width//8, data.height//8+(data.height*6)//10,
-            text = "Hamilton", font = "Georgia 20")
-            
-    def drawDijkstra(canvas, data): # draws Dijkstra button
-        rx = 80
-        ry = 20
-        canvas.create_rectangle(data.width//8-rx,
-            data.height//8+(data.height*7)//10-ry, 
-            data.width//8+rx, data.height//8+(data.height*7)//10+ry)
-        canvas.create_text(data.width//8, data.height//8+(data.height*7)//10,
-            text = "Dijkstra", font = "Georgia 20")
-        
-    def drawGrid(canvas, data):
-        #draws grid
-        dim = 50
-        numCols = (data.width-data.width//4)//dim
-        numRows = (data.height-(data.height//8+data.height//20))//dim
-        for i in range(numCols):
-            for j in range(numRows-1):
-                canvas.create_rectangle(i*dim+data.width//4, 
-                    j*dim+data.height//8+data.height//20, 
-                    (i+1)*dim+data.width//4, 
-                    (j+1)*dim+data.height//8+data.height//20)
+  
                     
     def drawCheckmark(self, canvas, x, y, r, data):
         # checks box if grid is displayed
@@ -213,7 +156,7 @@ class Build(object):
 
     def draw(self, canvas, data):
         # print (data.allEdges)
-        canvas.create_rectangle(0,0,data.width, data.height, fill = "sky blue")
+        canvas.create_rectangle(0,0,data.width, data.height, fill = "white")
         Build.drawBackButton(canvas, data)
         Build.drawEraseButton(canvas, data)
         Build.drawStatBox(canvas, data)
@@ -275,18 +218,12 @@ def mousePressedEraseAll(event, data): # erase all button
         (data.build.eraseX+data.backRX):
         if (data.backY-data.backRY) <= event.y <= (data.backY+data.backRY):
             Build.clearAll(data)
-            initDFS(data)
-            initBFS(data)
-            initDijkstra(data)
             
 def mousePressedReset(event, data): # resets searching algorithms
     if (data.build.eraseX-data.backRX) <= event.x <= \
         (data.build.eraseX+data.backRX):
         if (data.height-data.backY-data.backRY) <= event.y <= \
             (data.height-data.backY+data.backRY):
-            initDFS(data)
-            initBFS(data)
-            initDijkstra(data)
             data.hamilton.__init__(data)
             Hamilton.mode = None
             data.build.mode = "node"
@@ -378,14 +315,7 @@ def mousePressedBuild(event, data):
     mousePressedToolbox(event, data)
     mousePressedGrid(event, data)
     mousePressedWeight(event, data)
-    searchBFS(event, data)
-    searchDFS(event, data)
-    if data.build.mode == "searchBFS":
-        mousePressedBFS(event, data)
-    elif data.build.mode == "searchDFS":
-        mousePressedDFS(event, data)
-    elif data.build.mode == "dijkstra":
-        setPoints(event, data)
+
     
     
 def redrawEdges(dict1, dict2, color, canvas, data):
@@ -411,12 +341,7 @@ def redrawBuild(canvas, data):
         (x, y) = (data.nodes[node][0], data.nodes[node][1])
         canvas.create_oval(x-data.nodeR, y-data.nodeR, 
             x+data.nodeR, y+data.nodeR, fill = "black")
-        # prints degree of node
-        # canvas.create_text(x, y, anchor = "center", 
-        #     text = str(node), fill = "white", font = "Georgia 16")
-        # canvas.create_text(x, y, anchor = "center", 
-        #     text = str(numDegrees(data, node)), fill = "white", 
-        #     font = "Georgia 16")
+
     if data.build.displayWeights == True:
         drawWeight(canvas, data)
     for edge in data.allEdges:

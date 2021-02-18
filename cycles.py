@@ -1,7 +1,5 @@
-from visualDFS import *
-from convertNodes import *
 
-# Hamilton Cycles
+from convertNodes import *
 
 class Hamilton(object): 
     def __init__(self, data):

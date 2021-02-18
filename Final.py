@@ -2,18 +2,13 @@ from startscreen import *
 from coverDesign import *
 from build import *
 from convertNodes import *
-from bfs import *
-from dfs import *
-from visualDFS import *
-from visualBFS import *
 from cycles import *
-from dijkstra import *
 from tkinter import *
 import random
 import math
 import copy
 
-def almostEqual(d1, d2, epsilon=10**-7): # taken from class notes
+def almostEqual(d1, d2, epsilon=10**-7):
     return (abs(d2 - d1) < epsilon)
 
 def init(data):
@@ -46,15 +41,6 @@ def init(data):
     data.removedBlueEdges = dict()
     data.lines = [ ]
     data.level = None
-    initDijkstra(data)
-    initDFS(data)
-    data.animateDFS = True
-    data.highlightDFS = [ ]
-    data.dfs = dfsSearch(graphBuilder(), 0, 7)
-    initBFS(data)
-    data.animateBFS = True
-    data.highlightBFS = [ ]
-    data.bfs = bfsSearch(graphBuilder(), 0, 7)
     
 
 def mousePressed(event, data):
@@ -65,8 +51,6 @@ def mousePressed(event, data):
         mousePressedCycles(event, data)
     elif data.mode == "build":
         mousePressedBuild(event, data)
-        data.hamilton.mousePressedHamilton(event, data)
-        data.hamilton.chooseStartNode(event, data)
 
 def keyPressed(event, data):
     if event.keysym == "n":
@@ -126,26 +110,21 @@ def run(width=300, height=300):
     def timerFiredWrapper(canvas, data):
         timerFired(data)
         redrawAllWrapper(canvas, data)
-        # pause, then call timerFired again
         canvas.after(data.timerDelay, timerFiredWrapper, canvas, data)
-    # Set up data and call init
     class Struct(object): pass
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 100 # milliseconds
+    data.timerDelay = 100 
     root = Tk()
     init(data)
-    # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.pack()
-    # set up events
     root.bind("<Button-1>", lambda event:
                             mousePressedWrapper(event, canvas, data))
     root.bind("<Key>", lambda event:
                             keyPressedWrapper(event, canvas, data))
     timerFiredWrapper(canvas, data)
-    # and launch the app
-    root.mainloop()  # blocks until window is closed
+    root.mainloop()  
 
 run(1000,800)
